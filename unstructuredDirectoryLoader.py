@@ -26,13 +26,18 @@ class CustomDirectoryLoader:
             print(file_path)
             # Use UnstructuredFileLoader to load each file
             loader = UnstructuredFileLoader(file_path=file_path, mode="elements")
-            docs = loader.load()
-            print(str(docs))
-            documents.extend(docs)
+            try:
+                docs = loader.load()
+                documents.extend(docs)
+                #print(str(docs))
+            except Exception:
+                print('Failed to load : ' + str(file_path))
+                pass
         return documents
     
 def main():
-    directory_loader = CustomDirectoryLoader(directory_path='./data/samples')
+    #directory_loader = CustomDirectoryLoader(directory_path='./data/samples')
+    directory_loader = CustomDirectoryLoader(directory_path='C:\\Users\\kpriyank\\VSCodeRepo\\langchain-rag-main\\examples')
     docs = directory_loader.load()
     print(docs)
 

@@ -10,19 +10,21 @@ import gradio as gr
 #import parseToDoc
 import unstructuredDirectoryLoader
 
-directory_loader = unstructuredDirectoryLoader.CustomDirectoryLoader(directory_path='./data/samples')
+directory_loader = unstructuredDirectoryLoader.CustomDirectoryLoader(directory_path='C:\\Users\\kpriyank\\VSCodeRepo\\HFLocalRAG\\LocalRAG\\data\\samples')
 docs = directory_loader.load()
 #print(docs)
 # Split into chunks
 text_splitter = SemanticChunker(HuggingFaceEmbeddings())
 documents = text_splitter.split_documents(docs)
 
-
 # Instantiate the embedding model
 embedder = HuggingFaceEmbeddings()
 
 # Create the vector store and fill it with embeddings
 vector = FAISS.from_documents(documents, embedder)
+vector.save_local("faiss_index")
+vector = FAISS.load_local("faiss_index", embedder, allow_dangerous_deserialization=True)
+
 retriever = vector.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
 # Define llm
